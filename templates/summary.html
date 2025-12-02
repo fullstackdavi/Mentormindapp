@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Gerador de Resumos - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-file-lines"></i> Gerador de Resumos com IA</h1>
+        <p>Envie um texto ou PDF e receba resumos, topicos e flashcards automaticos</p>
+    </div>
+    
+    <div class="card" style="max-width: 800px; margin: 0 auto 30px;">
+        <form id="summaryForm">
+            <div class="form-group">
+                <label class="form-label">Cole seu texto aqui</label>
+                <textarea class="form-control" id="textInput" rows="8" placeholder="Cole o conteudo que deseja resumir..."></textarea>
+            </div>
+            <div style="text-align: center; margin: 20px 0; color: var(--text-muted);">ou</div>
+            <div class="upload-zone" style="padding: 30px;" onclick="document.getElementById('pdfInput').click()">
+                <i class="fas fa-file-pdf" style="font-size: 32px;"></i>
+                <p>Clique para enviar um PDF</p>
+            </div>
+            <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+            <p id="fileName" style="text-align: center; color: var(--accent); margin: 10px 0;"></p>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="generateBtn">
+                <i class="fas fa-magic"></i> Gerar Resumo com IA
+            </button>
+        </form>
+    </div>
+    
+    <div id="loading" class="loading" style="display: none;">
+        <div class="spinner"></div>
+        <span style="margin-left: 15px;">Gerando resumo com IA...</span>
+    </div>
+    
+    <div id="summaryOutput" class="summary-output" style="display: none; max-width: 800px; margin: 0 auto;">
+        <h2 id="summaryTitle" style="margin-bottom: 25px;"></h2>
+        
+        <div class="summary-section">
+            <h3><i class="fas fa-compress"></i> Resumo Curto</h3>
+            <p id="shortSummary"></p>
+        </div>
+        
+        <div class="summary-section">
+            <h3><i class="fas fa-expand"></i> Resumo Completo</h3>
+            <p id="fullSummary"></p>
+        </div>
+        
+        <div class="summary-section">
+            <h3><i class="fas fa-list"></i> Topicos Principais</h3>
+            <div id="topicsList" class="topics-list"></div>
+        </div>
+        
+        <div class="summary-section">
+            <h3><i class="fas fa-sitemap"></i> Mapa Mental</h3>
+            <div id="mindMap" class="mind-map"></div>
+        </div>
+        
+        <div class="summary-section">
+            <h3><i class="fas fa-clone"></i> Flashcards Criados</h3>
+            <p id="flashcardsInfo" style="color: var(--success);"></p>
+            <a href="{{ url_for('flashcards') }}" class="btn btn-success">
+                <i class="fas fa-clone"></i> Ir para Flashcards
+            </a>
+        </div>
+    </div>
+    
+    {% if summaries %}
+    <div style="max-width: 800px; margin: 40px auto 0;">
+        <h3 style="margin-bottom: 20px;"><i class="fas fa-history"></i> Resumos Anteriores</h3>
+        <div style="display: grid; gap: 15px;">
+            {% for s in summaries %}
+            <div class="card" style="padding: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h4>{{ s.title }}</h4>
+                        <p style="color: var(--text-muted); font-size: 13px;">{{ s.created_at[:10] }}</p>
+                    </div>
+                    <button class="btn btn-sm btn-secondary" onclick="viewSummary({{ s.id }})">
+                        <i class="fas fa-eye"></i> Ver
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('pdfInput').addEventListener('change', function() {
+    if (this.files.length > 0) {
+        document.getElementById('fileName').textContent = this.files[0].name;
+    }
+});
+
+document.getElementById('summaryForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const text = document.getElementById('textInput').value;
+    const pdfFile = document.getElementById('pdfInput').files[0];
+    
+    if (!text && !pdfFile) {
+        alert('Por favor, insira um texto ou envie um PDF');
+        return;
+    }
+    
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('summaryOutput').style.display = 'none';
+    document.getElementById('generateBtn').disabled = true;
+    
+    const formData = new FormData();
+    if (text) formData.append('text', text);
+    if (pdfFile) formData.append('file', pdfFile);
+    
+    try {
+        const response = await fetch('/api/generate-summary', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displaySummary(data.summary);
+        } else {
+            alert(data.error || 'Erro ao gerar resumo');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erro ao gerar resumo');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('generateBtn').disabled = false;
+    }
+});
+
+function displaySummary(summary) {
+    document.getElementById('summaryTitle').textContent = summary.title;
+    document.getElementById('shortSummary').textContent = summary.short_summary;
+    document.getElementById('fullSummary').textContent = summary.full_summary;
+    
+    const topicsList = document.getElementById('topicsList');
+    topicsList.innerHTML = '';
+    (summary.topics || []).forEach(topic => {
+        const span = document.createElement('span');
+        span.className = 'topic-tag';
+        span.textContent = topic;
+        topicsList.appendChild(span);
+    });
+    
+    const mindMap = document.getElementById('mindMap');
+    if (summary.mind_map && summary.mind_map.central) {
+        mindMap.innerHTML = `
+            <div class="mind-map-center">${summary.mind_map.central}</div>
+            <div class="mind-map-branches">
+                ${(summary.mind_map.branches || []).map(b => `
+                    <div class="mind-map-branch">
+                        <h4>${b.name}</h4>
+                        <ul>${(b.items || []).map(i => `<li>${i}</li>`).join('')}</ul>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    
+    const flashcardsCount = (summary.flashcards || []).length;
+    document.getElementById('flashcardsInfo').textContent = `${flashcardsCount} flashcards foram criados automaticamente!`;
+    
+    document.getElementById('summaryOutput').style.display = 'block';
+    document.getElementById('summaryOutput').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+{% endblock %}

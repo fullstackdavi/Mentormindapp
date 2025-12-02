@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Gamificacao - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="level-display">
+        <div class="level-number">{{ level }}</div>
+        <div class="level-title">Nivel {{ level }}</div>
+        <div class="xp-bar">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (current_xp / xp_needed * 100) if xp_needed > 0 else 0 }}%"></div>
+            </div>
+            <div class="xp-text">{{ current_xp }} / {{ xp_needed }} XP para o proximo nivel</div>
+        </div>
+    </div>
+    
+    <div class="stats-grid" style="margin-bottom: 40px;">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: var(--gradient-2);">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ user.xp }}</h3>
+                <p>XP Total</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon streak">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ user.streak_days }}</h3>
+                <p>Dias de sequencia</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon focus">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ user.total_focus_time }}</h3>
+                <p>Minutos de foco</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-medal"></i> Conquistas</h3>
+                </div>
+                <div class="badge-grid">
+                    {% for badge in badges %}
+                    <div class="badge-card {% if badge.earned_at %}earned{% else %}locked{% endif %}">
+                        <div class="badge-icon">
+                            <i class="fas {{ badge.icon }}"></i>
+                        </div>
+                        <div class="badge-name">{{ badge.name }}</div>
+                        <div class="badge-desc">{{ badge.description }}</div>
+                        {% if badge.earned_at %}
+                        <div style="margin-top: 10px; color: var(--success); font-size: 12px;">
+                            <i class="fas fa-check"></i> Conquistado
+                        </div>
+                        {% else %}
+                        <div style="margin-top: 10px; color: var(--warning); font-size: 12px;">
+                            +{{ badge.xp_reward }} XP
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-trophy"></i> Ranking Global</h3>
+                </div>
+                <ul class="ranking-list">
+                    {% for r in ranking %}
+                    <li class="ranking-item {% if r.username == session.username %}{% endif %}" style="{% if r.username == session.username %}border: 2px solid var(--accent);{% endif %}">
+                        <span class="ranking-position">
+                            {% if loop.index == 1 %}
+                            <i class="fas fa-crown" style="color: gold;"></i>
+                            {% elif loop.index == 2 %}
+                            <i class="fas fa-medal" style="color: silver;"></i>
+                            {% elif loop.index == 3 %}
+                            <i class="fas fa-medal" style="color: #cd7f32;"></i>
+                            {% else %}
+                            {{ loop.index }}
+                            {% endif %}
+                        </span>
+                        <div class="ranking-info">
+                            <div class="ranking-name">{{ r.name or r.username }}</div>
+                            <div class="ranking-time">Nivel {{ r.level }} - {{ r.xp }} XP</div>
+                        </div>
+                        {% if r.streak_days > 0 %}
+                        <span style="color: var(--warning);"><i class="fas fa-fire"></i> {{ r.streak_days }}</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

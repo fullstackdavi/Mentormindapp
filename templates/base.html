@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>{% block title %}MentorMind{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <!-- Preconnect para recursos externos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Preload recursos críticos -->
+    <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ range(1000, 9999) | random }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div id="video-container">
+        <video autoplay loop muted playsinline id="bgVideo" poster="{{ url_for('static', filename='images/video-poster.jpg') }}">
+        </video>
+        <div class="video-fallback"></div>
+    </div>
+    <div class="video-overlay"></div>
+    {% if session.user_id %}
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('dashboard') }}" class="navbar-brand">
+                <i class="fas fa-brain"></i>
+                MentorMind
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="{{ url_for('focus') }}" class="nav-link {% if request.endpoint == 'focus' %}active{% endif %}"><i class="fas fa-bullseye"></i> Foco</a></li>
+                <li><a href="{{ url_for('library') }}" class="nav-link {% if request.endpoint == 'library' %}active{% endif %}"><i class="fas fa-book"></i> Biblioteca</a></li>
+                <li><a href="{{ url_for('summary') }}" class="nav-link {% if request.endpoint == 'summary' %}active{% endif %}"><i class="fas fa-file-lines"></i> Resumos</a></li>
+                <li><a href="{{ url_for('flashcards') }}" class="nav-link {% if request.endpoint == 'flashcards' %}active{% endif %}"><i class="fas fa-clone"></i> Flashcards</a></li>
+                <li><a href="{{ url_for('study_plan') }}" class="nav-link {% if request.endpoint == 'study_plan' %}active{% endif %}"><i class="fas fa-calendar"></i> Plano</a></li>
+                <li><a href="{{ url_for('tutor') }}" class="nav-link {% if request.endpoint == 'tutor' %}active{% endif %}"><i class="fas fa-robot"></i> Tutor</a></li>
+            </ul>
+            <div class="navbar-user">
+                <a href="{{ url_for('gamification') }}" class="user-level">
+                    <i class="fas fa-star"></i>
+                    Nivel {{ level if level else user.level }}
+                </a>
+                <a href="{{ url_for('profile') }}" class="nav-link"><i class="fas fa-user"></i></a>
+                <a href="{{ url_for('logout') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="mobile-nav">
+        <ul>
+            <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="{{ url_for('focus') }}" class="nav-link {% if request.endpoint == 'focus' %}active{% endif %}"><i class="fas fa-bullseye"></i> Foco</a></li>
+            <li><a href="{{ url_for('flashcards') }}" class="nav-link {% if request.endpoint == 'flashcards' %}active{% endif %}"><i class="fas fa-clone"></i> Cards</a></li>
+            <li><a href="{{ url_for('tutor') }}" class="nav-link {% if request.endpoint == 'tutor' %}active{% endif %}"><i class="fas fa-robot"></i> Tutor</a></li>
+            <li><a href="{{ url_for('profile') }}" class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}"><i class="fas fa-user"></i> Perfil</a></li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container" style="padding-top: 20px;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

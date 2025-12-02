@@ -1,0 +1,344 @@
+Quero que você crie o design completo, a estrutura funcional, o fluxo de telas, e a lógica do aplicativo chamado MentorMind — um app de estudos e leitura que ajude estudantes de todas as idades a aprender, memorizar e estudar de forma mais eficiente.
+
+Crie um aplicativo completo, bonito, funcional, moderno e extremamente intuitivo.
+Use uma estética minimalista, profissional e clean, com foco total na experiência do estudante.
+
+🎯 OBJETIVO DO APP
+
+Criar um app capaz de:
+
+ajudar o aluno a estudar
+
+aprender mais rápido
+
+memorizar conteúdos
+
+organizar PDFs e materiais
+
+combater a procrastinação
+
+melhorar foco e disciplina
+
+interpretar textos
+
+ler melhor
+
+estudar para provas e concursos
+
+O app deve unir: IA + leitura + gamificação + estudo ativo + calendário + cronograma inteligente.
+
+📱 TELAS OBRIGATÓRIAS (COM FUNÇÕES)
+1. Tela Inicial (Dashboard Inteligente)
+
+Resumo do dia
+
+Metas de estudo
+
+Tempo de foco diário
+
+Progresso semanal
+
+Flashcards pendentes
+
+Atividades recomendadas pela IA (baseado no desempenho)
+
+Botões principais:
+
+Estudar Agora
+
+Ler Agora
+
+Gerar Resumo
+
+Plano de Estudos
+
+Biblioteca de PDFs
+
+2. Modo Foco (Anti-Procrastinação)
+
+Pomodoro personalizável
+
+Música foco neural integrada
+
+Sons de concentração
+
+Bloqueio de distrações (sugestão para mobile)
+
+Ranking semanal de tempo focado
+
+Análise de produtividade
+
+3. Gerador de Resumos (IA)
+
+O usuário envia:
+
+PDF
+
+foto
+
+texto
+
+página de livro
+
+E o app gera:
+
+resumo curto
+
+resumo completo
+
+tópicos organizados
+
+mapa mental automático
+
+flashcards automáticos
+
+explicações simplificadas
+
+4. Plano de Estudos Inteligente
+
+O usuário define:
+
+objetivo (ENEM, concurso, prova, faculdade, TCC)
+
+quanto tempo tem por dia
+
+prazo final
+
+O app cria:
+
+cronograma completo
+
+metas diárias
+
+lembretes
+
+prioridade dos conteúdos
+
+análise de evolução
+
+revisão baseada em erros (spaced repetition)
+
+5. Biblioteca Inteligente
+
+Upload de PDFs
+
+Organização automática por matéria
+
+Tags inteligentes criadas pela IA
+
+Busca por conteúdo dentro dos PDFs
+
+Modo leitura com marcações
+
+6. Leitura Assistida
+
+Ferramentas:
+
+explicador automático (“Explique este trecho”)
+
+interpretação guiada
+
+audiobooks gerados automaticamente
+
+destaques inteligentes
+
+notas automáticas criadas pela IA
+
+7. Flashcards Inteligentes
+
+criados automaticamente a partir do resumo
+
+revisão espaçada (método SM-2)
+
+modo batalha (competição de memorização)
+
+gráficos de acertos e erros
+
+8. Simulados Inteligentes
+
+Baseados no que o aluno estudou:
+
+questões adaptativas
+
+níveis de dificuldade
+
+correção automática
+
+explicação das questões
+
+relatório dos erros e pontos fracos
+
+9. Tutor IA 24h
+
+Chat tipo “mentor digital”, capaz de:
+
+ensinar matérias
+
+explicar exercícios passo a passo
+
+corrigir redação
+
+responder dúvidas gerais
+
+adaptar linguagem para idade e nível do aluno
+
+sugerir como estudar melhor
+
+10. Modo Mentor (exclusivo)
+
+Metas diárias impostas pela IA
+
+mensagens motivacionais personalizadas
+
+cobrança se não estudar
+
+lembretes inteligentes
+
+frases de impacto
+
+incentivos de disciplina
+
+(O estilo deve ser firme, direto e disciplinador.)
+
+11. Gamificação e Recompensas
+
+XP por tempo de estudo
+
+Níveis de progresso
+
+Badges por conquistas
+
+Ranking entre amigos
+
+Recompensas semanais
+
+12. Sala de Estudo Duo
+
+estudo simultâneo com um amigo
+
+cronômetro sincronizado
+
+chat silencioso
+
+metas compartilhadas
+
+🧠 FUNCIONALIDADES DIFERENCIAIS
+
+Inclua no app:
+
+Scaneamento de quadros e cadernos para transformar fotos em PDFs organizados.
+
+Mapa mental automático gerado a partir de qualquer texto.
+
+Assistente de Interpretação ENEM, destacando:
+
+tese
+
+argumentos
+
+implícitos
+
+resumo por parágrafos
+
+Audiobook AI de qualquer PDF, com vozes naturais.
+
+Modo Madrugada: estética especial para estudar à noite.
+
+Detector de Pontos Fracos:
+
+temas recorrentes de erro
+
+recomendações de estudo personalizadas
+
+🎨 ESTILO VISUAL DO APP
+
+Minimalista
+
+Moderno
+
+Bordas arredondadas
+
+Ícones suaves
+
+Cores recomendadas:
+
+azul escuro
+
+roxo suave
+
+cinza carvão
+
+gradientes sutis
+
+Tipografia clean e forte
+
+🧩 FLUXO DO USUÁRIO
+
+Abre o app → Dashboard com metas
+
+Decide:
+
+Estudar → Modo Foco + tarefas do plano
+
+Ler → Biblioteca → Audiobook/Explicações
+
+Enviar conteúdo → Resumo autom. + Flashcards
+
+Revisão com simulados
+
+IA sugere estudo do dia
+
+Progresso atualizado no ranking
+
+🧪 FUNÇÕES DE TESTE E SEGURANÇA
+
+backups automáticos na nuvem
+
+histórico de resumos
+
+exportar mapas mentais e flashcards
+
+modo offline básico
+
+salvar áudio do audiobook
+
+💰 MONETIZAÇÃO (Incluir na lógica)
+Free:
+
+Modo Foco
+
+Flashcards limitados
+
+Simulados básicos
+
+Premium:
+
+IA ilimitada
+
+resumos avançados
+
+audiobooks
+
+modo mentor
+
+planos de estudo completos
+
+Escolar:
+
+versão para escolas e universidades
+
+🛠️ GERAR NO FINAL:
+
+listas de telas
+
+wireframes
+
+componentes principais
+
+arquitetura recomendada
+
+fluxos de usuário
+
+sugestões de animações
+
+Crie o aplicativo completo (UX + UI + estrutura + funcionalidades) com base neste prompt.

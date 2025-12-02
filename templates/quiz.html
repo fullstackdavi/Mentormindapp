@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Simulados - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-clipboard-list"></i> Simulados Inteligentes</h1>
+        <p>Teste seus conhecimentos com questoes adaptativas</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div>
+            <div class="card" id="quizForm">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-plus"></i> Gerar Novo Simulado</h3>
+                </div>
+                <form id="generateQuizForm">
+                    <div class="form-group">
+                        <label class="form-label">Materia</label>
+                        <select class="form-control" id="quizSubject">
+                            <option value="Matematica">Matematica</option>
+                            <option value="Portugues">Portugues</option>
+                            <option value="Historia">Historia</option>
+                            <option value="Geografia">Geografia</option>
+                            <option value="Fisica">Fisica</option>
+                            <option value="Quimica">Quimica</option>
+                            <option value="Biologia">Biologia</option>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="Ingles">Ingles</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Topico especifico (opcional)</label>
+                        <input type="text" class="form-control" id="quizTopic" placeholder="Ex: Equacoes do 2o grau">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Numero de questoes</label>
+                        <select class="form-control" id="quizCount">
+                            <option value="5">5 questoes</option>
+                            <option value="10">10 questoes</option>
+                            <option value="15">15 questoes</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;" id="generateBtn">
+                        <i class="fas fa-magic"></i> Gerar Simulado com IA
+                    </button>
+                </form>
+            </div>
+            
+            <div id="quizContainer" style="display: none;">
+                <div id="quizQuestions"></div>
+                <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 20px;" onclick="submitQuiz()">
+                    <i class="fas fa-check"></i> Finalizar Simulado
+                </button>
+            </div>
+            
+            <div id="quizResults" class="card" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-bar"></i> Resultado</h3>
+                </div>
+                <div id="resultsContent"></div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 20px;" onclick="location.reload()">
+                    <i class="fas fa-redo"></i> Novo Simulado
+                </button>
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-history"></i> Historico</h3>
+                </div>
+                {% if attempts %}
+                {% for a in attempts %}
+                <div style="padding: 15px; background: var(--primary); border-radius: 8px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="font-size: 14px;">{{ a.title }}</h4>
+                            <p style="color: var(--text-muted); font-size: 12px;">{{ a.completed_at[:10] }}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 20px; font-weight: 700; color: {% if a.score / a.total >= 0.7 %}var(--success){% elif a.score / a.total >= 0.5 %}var(--warning){% else %}var(--danger){% endif %};">
+                                {{ a.score }}/{{ a.total }}
+                            </div>
+                            <small style="color: var(--text-muted);">{{ ((a.score / a.total) * 100)|int }}%</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Nenhum simulado realizado ainda
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentQuiz = null;
+let userAnswers = [];
+let startTime = null;
+
+document.getElementById('generateQuizForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
+    
+    try {
+        const response = await fetch('/api/generate-quiz', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                subject: document.getElementById('quizSubject').value,
+                topic: document.getElementById('quizTopic').value,
+                num_questions: parseInt(document.getElementById('quizCount').value)
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            currentQuiz = data;
+            userAnswers = new Array(data.questions.length).fill(-1);
+            startTime = Date.now();
+            displayQuiz(data.questions);
+        } else {
+            alert(data.error || 'Erro ao gerar simulado');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erro ao gerar simulado');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-magic"></i> Gerar Simulado com IA';
+    }
+});
+
+function displayQuiz(questions) {
+    document.getElementById('quizForm').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
+    
+    const container = document.getElementById('quizQuestions');
+    container.innerHTML = questions.map((q, i) => `
+        <div class="quiz-question">
+            <div class="question-number">Questao ${i + 1} de ${questions.length}</div>
+            <div class="question-text">${q.question}</div>
+            <ul class="options-list">
+                ${q.options.map((opt, j) => `
+                    <li class="option-item" data-question="${i}" data-option="${j}" onclick="selectOption(${i}, ${j})">
+                        <strong>${String.fromCharCode(65 + j)})</strong> ${opt}
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    `).join('');
+}
+
+function selectOption(questionIndex, optionIndex) {
+    userAnswers[questionIndex] = optionIndex;
+    
+    document.querySelectorAll(`[data-question="${questionIndex}"]`).forEach(el => {
+        el.classList.remove('selected');
+    });
+    document.querySelector(`[data-question="${questionIndex}"][data-option="${optionIndex}"]`).classList.add('selected');
+}
+
+async function submitQuiz() {
+    if (userAnswers.includes(-1)) {
+        if (!confirm('Voce nao respondeu todas as questoes. Deseja continuar?')) {
+            return;
+        }
+    }
+    
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+    
+    try {
+        const response = await fetch('/api/quiz/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                quiz_id: currentQuiz.quiz_id,
+                answers: userAnswers,
+                time_spent: timeSpent
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displayResults(data);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function displayResults(data) {
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('quizResults').style.display = 'block';
+    
+    const scoreColor = data.percentage >= 70 ? 'var(--success)' : data.percentage >= 50 ? 'var(--warning)' : 'var(--danger)';
+    
+    document.getElementById('resultsContent').innerHTML = `
+        <div style="text-align: center; padding: 30px;">
+            <div style="font-size: 64px; font-weight: 700; color: ${scoreColor};">
+                ${data.score}/${data.total}
+            </div>
+            <p style="font-size: 24px; color: var(--text-muted);">${data.percentage}%</p>
+            <p style="color: var(--success); margin-top: 10px;">+${data.xp_earned} XP</p>
+        </div>
+        <h4 style="margin: 20px 0 15px;"><i class="fas fa-list"></i> Revisao das Questoes</h4>
+        ${data.results.map((r, i) => `
+            <div style="padding: 15px; background: var(--primary); border-radius: 8px; margin-bottom: 10px; border-left: 4px solid ${r.is_correct ? 'var(--success)' : 'var(--danger)'};">
+                <p style="margin-bottom: 10px;"><strong>Q${i + 1}:</strong> ${r.question}</p>
+                <p style="color: ${r.is_correct ? 'var(--success)' : 'var(--danger)'};">
+                    <i class="fas fa-${r.is_correct ? 'check' : 'times'}"></i>
+                    ${r.is_correct ? 'Correto' : 'Incorreto - Resposta: ' + String.fromCharCode(65 + r.correct_answer)}
+                </p>
+                ${r.explanation ? `<p style="color: var(--text-muted); margin-top: 8px; font-size: 13px;"><i class="fas fa-lightbulb"></i> ${r.explanation}</p>` : ''}
+            </div>
+        `).join('')}
+    `;
+}
+</script>
+{% endblock %}

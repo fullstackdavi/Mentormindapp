@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Tutor IA - MentorMind{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="dashboard-header" style="padding-bottom: 20px;">
+        <h1><i class="fas fa-robot"></i> Tutor IA 24h</h1>
+        <p>Seu mentor pessoal para tirar duvidas e aprender</p>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+        {% if not messages %}
+        <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+            <i class="fas fa-robot" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+            <h3>Ola! Sou seu tutor virtual.</h3>
+            <p>Posso te ajudar a:</p>
+            <ul style="list-style: none; margin-top: 15px;">
+                <li><i class="fas fa-check" style="color: var(--success);"></i> Explicar materias</li>
+                <li><i class="fas fa-check" style="color: var(--success);"></i> Resolver exercicios passo a passo</li>
+                <li><i class="fas fa-check" style="color: var(--success);"></i> Corrigir redacoes</li>
+                <li><i class="fas fa-check" style="color: var(--success);"></i> Dar dicas de estudo</li>
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% for msg in messages %}
+        <div class="message {{ msg.role }}">
+            <div class="message-avatar">
+                <i class="fas fa-{% if msg.role == 'user' %}user{% else %}robot{% endif %}"></i>
+            </div>
+            <div class="message-content">{{ msg.content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="chat-input">
+        <input type="text" class="form-control" id="messageInput" placeholder="Digite sua duvida ou pergunta..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button class="btn btn-primary" onclick="sendMessage()" id="sendBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<div style="position: fixed; bottom: 90px; right: 20px; display: flex; flex-direction: column; gap: 10px;">
+    <button class="btn btn-secondary btn-sm" onclick="askSuggestion('Como estudar melhor?')">
+        <i class="fas fa-lightbulb"></i> Dicas de estudo
+    </button>
+    <button class="btn btn-secondary btn-sm" onclick="askSuggestion('Me ajude a criar um cronograma')">
+        <i class="fas fa-calendar"></i> Cronograma
+    </button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const chatMessages = document.getElementById('chatMessages');
+chatMessages.scrollTop = chatMessages.scrollHeight;
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (!message) {
+        alert('Por favor, digite uma mensagem');
+        return;
+    }
+    
+    addMessage(message, 'user');
+    input.value = '';
+    
+    const sendBtn = document.getElementById('sendBtn');
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ message })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Erro de comunicacao com o servidor' }));
+            throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.reply) {
+            addMessage(data.reply, 'assistant');
+        } else {
+            throw new Error(data.error || 'Resposta invalida do servidor');
+        }
+    } catch (error) {
+        console.error('Erro no chat:', error);
+        let errorMessage = 'Desculpe, ocorreu um erro. ';
+        
+        if (error.message.includes('API')) {
+            errorMessage += 'Verifique se a chave da API Google esta configurada corretamente.';
+        } else if (error.message.includes('quota')) {
+            errorMessage += 'Limite de uso da API atingido. Tente novamente mais tarde.';
+        } else if (error.message.includes('Failed to fetch')) {
+            errorMessage += 'Erro de conexao. Verifique sua internet.';
+        } else {
+            errorMessage += error.message || 'Tente novamente.';
+        }
+        
+        addMessage(errorMessage, 'assistant');
+    } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+    }
+}
+
+function addMessage(content, role) {
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    div.innerHTML = `
+        <div class="message-avatar">
+            <i class="fas fa-${role === 'user' ? 'user' : 'robot'}"></i>
+        </div>
+        <div class="message-content">${content}</div>
+    `;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function askSuggestion(question) {
+    document.getElementById('messageInput').value = question;
+    sendMessage();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MentorMind{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Ola, {{ user.name }}!</h1>
+            <p>Vamos estudar hoje? Voce esta no nivel {{ level }} com {{ user.streak_days }} dias de sequencia!</p>
+        </div>
+        
+        {% if mentor_msgs %}
+        <div class="mentor-card">
+            <h3><i class="fas fa-fire"></i> Mensagem do Mentor</h3>
+            <p class="mentor-message">{{ mentor_msgs[0].message }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon focus">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.focus_today }} min</h3>
+                    <p>Tempo de foco hoje</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon flashcards">
+                    <i class="fas fa-clone"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.pending_flashcards }}</h3>
+                    <p>Flashcards pendentes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon tasks">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ stats.pending_tasks }}</h3>
+                    <p>Tarefas de hoje</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon streak">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ user.streak_days }} dias</h3>
+                    <p>Sequencia de estudos</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <a href="{{ url_for('focus') }}" class="quick-action">
+                <i class="fas fa-bullseye"></i>
+                <h4>Estudar Agora</h4>
+            </a>
+            <a href="{{ url_for('library') }}" class="quick-action">
+                <i class="fas fa-book-open"></i>
+                <h4>Ler Agora</h4>
+            </a>
+            <a href="{{ url_for('summary') }}" class="quick-action">
+                <i class="fas fa-file-lines"></i>
+                <h4>Gerar Resumo</h4>
+            </a>
+            <a href="{{ url_for('study_plan') }}" class="quick-action">
+                <i class="fas fa-calendar-check"></i>
+                <h4>Plano de Estudos</h4>
+            </a>
+            <a href="{{ url_for('flashcards') }}" class="quick-action">
+                <i class="fas fa-clone"></i>
+                <h4>Flashcards</h4>
+            </a>
+            <a href="{{ url_for('tutor') }}" class="quick-action">
+                <i class="fas fa-robot"></i>
+                <h4>Tutor IA</h4>
+            </a>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-tasks"></i> Tarefas de Hoje</h3>
+                    <a href="{{ url_for('study_plan') }}" class="btn btn-sm btn-secondary">Ver todas</a>
+                </div>
+                {% if tasks %}
+                <ul class="task-list">
+                    {% for task in tasks %}
+                    <li class="task-item {% if task.is_completed %}completed{% endif %}" data-id="{{ task.id }}">
+                        <div class="task-checkbox {% if task.is_completed %}completed{% endif %}" onclick="toggleTask({{ task.id }})">
+                            {% if task.is_completed %}<i class="fas fa-check"></i>{% endif %}
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">{{ task.title }}</div>
+                            <div class="task-meta">{{ task.subject }} - {{ task.duration_minutes }} min</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p style="color: var(--text-muted); text-align: center; padding: 20px;">Nenhuma tarefa para hoje. <a href="{{ url_for('study_plan') }}">Criar plano de estudos</a></p>
+                {% endif %}
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-line"></i> Progresso</h3>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Nivel {{ level }}</span>
+                        <span>{{ current_xp }}/{{ xp_needed }} XP</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ (current_xp / xp_needed * 100) if xp_needed > 0 else 0 }}%"></div>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--primary); border-radius: 8px;">
+                        <span>Total de XP</span>
+                        <strong>{{ user.xp }}</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--primary); border-radius: 8px;">
+                        <span>Tempo total de foco</span>
+                        <strong>{{ user.total_focus_time }} min</strong>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <a href="{{ url_for('gamification') }}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-trophy"></i> Ver conquistas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function toggleTask(taskId) {
+    try {
+        const response = await fetch('/api/task/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: taskId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+</script>
+{% endblock %}

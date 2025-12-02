@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Modo Foco - MentorMind{% endblock %}
+
+{% block content %}
+<div class="focus-container">
+    <h1 style="margin-bottom: 10px;"><i class="fas fa-bullseye"></i> Modo Foco</h1>
+    <p style="color: var(--text-muted); margin-bottom: 30px;">Concentre-se no que importa. Cada minuto conta!</p>
+    
+    <div class="timer-presets">
+        <button class="preset-btn active" onclick="setTimer(25)">25 min</button>
+        <button class="preset-btn" onclick="setTimer(30)">30 min</button>
+        <button class="preset-btn" onclick="setTimer(45)">45 min</button>
+        <button class="preset-btn" onclick="setTimer(60)">60 min</button>
+    </div>
+    
+    <div class="timer-display" id="timer">25:00</div>
+    
+    <div class="timer-controls">
+        <button class="btn btn-primary btn-lg" id="startBtn" onclick="toggleTimer()">
+            <i class="fas fa-play"></i> Iniciar
+        </button>
+        <button class="btn btn-secondary btn-lg" onclick="resetTimer()">
+            <i class="fas fa-redo"></i> Resetar
+        </button>
+    </div>
+    
+    <div style="margin-bottom: 40px;">
+        <h3 style="margin-bottom: 15px;"><i class="fas fa-music"></i> Sons de Concentracao</h3>
+        <div class="sound-controls">
+            <button class="sound-btn" data-sound="rain" onclick="toggleSound('rain')">
+                <i class="fas fa-cloud-rain"></i> Chuva
+            </button>
+            <button class="sound-btn" data-sound="forest" onclick="toggleSound('forest')">
+                <i class="fas fa-tree"></i> Floresta
+            </button>
+            <button class="sound-btn" data-sound="waves" onclick="toggleSound('waves')">
+                <i class="fas fa-water"></i> Ondas
+            </button>
+            <button class="sound-btn" data-sound="fire" onclick="toggleSound('fire')">
+                <i class="fas fa-fire"></i> Fogueira
+            </button>
+            <button class="sound-btn" data-sound="cafe" onclick="toggleSound('cafe')">
+                <i class="fas fa-coffee"></i> Cafe
+            </button>
+        </div>
+    </div>
+    
+    <div class="card" style="max-width: 500px; margin: 0 auto;">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-trophy"></i> Ranking Semanal</h3>
+        </div>
+        <ul class="ranking-list">
+            {% for r in ranking %}
+            <li class="ranking-item">
+                <span class="ranking-position">{{ loop.index }}</span>
+                <div class="ranking-info">
+                    <div class="ranking-name">{{ r.name or r.username }}</div>
+                    <div class="ranking-time">{{ r.total_focus or 0 }} minutos esta semana</div>
+                </div>
+                {% if loop.index == 1 %}
+                <i class="fas fa-crown" style="color: gold;"></i>
+                {% elif loop.index == 2 %}
+                <i class="fas fa-medal" style="color: silver;"></i>
+                {% elif loop.index == 3 %}
+                <i class="fas fa-medal" style="color: #cd7f32;"></i>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let timerMinutes = 25;
+let timeLeft = timerMinutes * 60;
+let timerInterval = null;
+let isRunning = false;
+let activeSounds = {};
+let audioContext = null;
+let cafeNoiseNode = null;
+
+const audioElements = {
+    rain: createAudioElement('/static/sounds/rain.mp3'),
+    forest: createAudioElement('/static/sounds/forest.mp3'),
+    waves: createAudioElement('/static/sounds/waves.mp3'),
+    fire: createAudioElement('/static/sounds/fire.mp3'),
+    cafe: createAudioElement('/static/sounds/cafe.mp3')
+};
+
+function createAudioElement(src) {
+    const audio = new Audio();
+    audio.src = src;
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.preload = 'auto';
+    return audio;
+}
+
+function getAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+    return audioContext;
+}
+
+function createCafeNoise() {
+    const ctx = getAudioContext();
+    const bufferSize = 4 * ctx.sampleRate;
+    const noiseBuffer = ctx.createBuffer(2, bufferSize, ctx.sampleRate);
+    
+    for (let channel = 0; channel < 2; channel++) {
+        const output = noiseBuffer.getChannelData(channel);
+        for (let i = 0; i < bufferSize; i++) {
+            const t = i / ctx.sampleRate;
+            const pouringCycle = (t * 3) % 1;
+            const pouringIntensity = 0.3 + 0.2 * Math.sin(pouringCycle * Math.PI * 2);
+            const bubbles = Math.random() * pouringIntensity;
+            const liquidFlow = Math.sin(i / 50 + Math.random() * 10) * 0.15 * pouringIntensity;
+            const splash = Math.random() > 0.998 ? Math.random() * 0.4 : 0;
+            const drip = Math.sin(i / 20) * (Math.random() > 0.99 ? 0.2 : 0);
+            output[i] = (bubbles + liquidFlow + splash + drip) * 0.6;
+        }
+    }
+    
+    const source = ctx.createBufferSource();
+    source.buffer = noiseBuffer;
+    source.loop = true;
+    
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1500;
+    filter.Q.value = 0.8;
+    
+    const lowFilter = ctx.createBiquadFilter();
+    lowFilter.type = 'lowpass';
+    lowFilter.frequency.value = 4000;
+    
+    const gainNode = ctx.createGain();
+    gainNode.gain.value = 0.6;
+    
+    source.connect(filter);
+    filter.connect(lowFilter);
+    lowFilter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    return { source, gainNode };
+}
+
+function setTimer(minutes) {
+    if (isRunning) return;
+    timerMinutes = minutes;
+    timeLeft = minutes * 60;
+    updateDisplay();
+    document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function updateDisplay() {
+    const mins = Math.floor(timeLeft / 60);
+    const secs = timeLeft % 60;
+    document.getElementById('timer').textContent = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function toggleTimer() {
+    if (isRunning) {
+        clearInterval(timerInterval);
+        document.getElementById('startBtn').innerHTML = '<i class="fas fa-play"></i> Continuar';
+    } else {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                completeSession();
+            }
+        }, 1000);
+        document.getElementById('startBtn').innerHTML = '<i class="fas fa-pause"></i> Pausar';
+    }
+    isRunning = !isRunning;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    isRunning = false;
+    timeLeft = timerMinutes * 60;
+    updateDisplay();
+    document.getElementById('startBtn').innerHTML = '<i class="fas fa-play"></i> Iniciar';
+}
+
+async function completeSession() {
+    try {
+        const response = await fetch('/api/focus/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ duration: timerMinutes })
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert(`Sessao completa! Voce ganhou ${data.xp_earned} XP!`);
+            resetTimer();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function toggleSound(sound) {
+    const btn = document.querySelector(`[data-sound="${sound}"]`);
+    const audio = audioElements[sound];
+    
+    if (activeSounds[sound]) {
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+        delete activeSounds[sound];
+        btn.classList.remove('active');
+    } else {
+        if (audio) {
+            audio.play().then(() => {
+                activeSounds[sound] = true;
+                btn.classList.add('active');
+            }).catch(err => {
+                console.log('Erro ao reproduzir som:', err);
+            });
+        }
+    }
+}
+</script>
+{% endblock %}

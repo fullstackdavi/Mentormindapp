@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}MentorMind - Seu Mentor de Estudos com IA{% endblock %}
+
+{% block content %}
+<section class="landing-hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Estude de forma inteligente com IA</h1>
+            <p>MentorMind e seu assistente pessoal de estudos. Gere resumos, flashcards, planos de estudo e tenha um tutor 24h para te ajudar a conquistar seus objetivos.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket"></i> Comecar Agora
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">
+                    <i class="fas fa-sign-in-alt"></i> Ja tenho conta
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3>Modo Foco</h3>
+            <p>Pomodoro personalizado com sons de concentracao para maximizar sua produtividade.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-file-lines"></i>
+            </div>
+            <h3>Resumos com IA</h3>
+            <p>Envie PDFs ou textos e receba resumos completos, topicos e flashcards automaticos.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-clone"></i>
+            </div>
+            <h3>Flashcards Inteligentes</h3>
+            <p>Sistema de revisao espacada SM-2 para memorizar conteudos de forma eficiente.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3>Plano de Estudos</h3>
+            <p>Cronograma personalizado baseado nos seus objetivos e tempo disponivel.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h3>Tutor IA 24h</h3>
+            <p>Tire duvidas, receba explicacoes e aprenda com um mentor virtual sempre disponivel.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h3>Gamificacao</h3>
+            <p>Ganhe XP, suba de nivel, conquiste badges e compita no ranking com amigos.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

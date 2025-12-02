@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Biblioteca - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-book"></i> Biblioteca Inteligente</h1>
+        <p>Organize seus PDFs e materiais de estudo</p>
+    </div>
+    
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h3>Arraste um arquivo ou clique para enviar</h3>
+        <p>PDF, PNG, JPG (max 16MB)</p>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg" style="display: none;" onchange="uploadFile(this)">
+    
+    <div class="form-group" style="max-width: 300px; margin-bottom: 30px;">
+        <select id="subjectFilter" class="form-control" onchange="filterBySubject()">
+            <option value="">Todas as materias</option>
+            <option value="Matematica">Matematica</option>
+            <option value="Portugues">Portugues</option>
+            <option value="Historia">Historia</option>
+            <option value="Geografia">Geografia</option>
+            <option value="Fisica">Fisica</option>
+            <option value="Quimica">Quimica</option>
+            <option value="Biologia">Biologia</option>
+            <option value="Ingles">Ingles</option>
+            <option value="Filosofia">Filosofia</option>
+            <option value="Sociologia">Sociologia</option>
+            <option value="Geral">Geral</option>
+        </select>
+    </div>
+    
+    <div class="library-grid">
+        {% for pdf in pdfs %}
+        <div class="pdf-card" data-subject="{{ pdf.subject }}">
+            <div class="pdf-icon">
+                <i class="fas fa-file-pdf"></i>
+            </div>
+            <h4 class="pdf-title">{{ pdf.original_name }}</h4>
+            <div class="pdf-meta">
+                <span><i class="fas fa-file"></i> {{ pdf.page_count }} paginas</span>
+                <span><i class="fas fa-folder"></i> {{ pdf.subject }}</span>
+            </div>
+            <div class="pdf-tags">
+                <span class="tag">{{ pdf.subject }}</span>
+            </div>
+            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                <a href="{{ url_for('summary') }}?pdf_id={{ pdf.id }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-file-lines"></i> Resumir
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-muted);">
+            <i class="fas fa-book-open" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+            <h3>Sua biblioteca esta vazia</h3>
+            <p>Envie seu primeiro PDF para comecar!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal" id="uploadModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Enviar Arquivo</h3>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label class="form-label">Materia</label>
+                <select name="subject" class="form-control" id="uploadSubject">
+                    <option value="Geral">Geral</option>
+                    <option value="Matematica">Matematica</option>
+                    <option value="Portugues">Portugues</option>
+                    <option value="Historia">Historia</option>
+                    <option value="Geografia">Geografia</option>
+                    <option value="Fisica">Fisica</option>
+                    <option value="Quimica">Quimica</option>
+                    <option value="Biologia">Biologia</option>
+                    <option value="Ingles">Ingles</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-upload"></i> Enviar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let selectedFile = null;
+
+function uploadFile(input) {
+    if (input.files.length > 0) {
+        selectedFile = input.files[0];
+        document.getElementById('uploadModal').classList.add('active');
+    }
+}
+
+function closeModal() {
+    document.getElementById('uploadModal').classList.remove('active');
+}
+
+document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!selectedFile) return;
+    
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('subject', document.getElementById('uploadSubject').value);
+    
+    try {
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.error || 'Erro ao enviar arquivo');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erro ao enviar arquivo');
+    }
+});
+
+function filterBySubject() {
+    const filter = document.getElementById('subjectFilter').value;
+    document.querySelectorAll('.pdf-card').forEach(card => {
+        if (!filter || card.dataset.subject === filter) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = 'var(--accent)';
+    uploadZone.style.background = 'rgba(123, 44, 191, 0.1)';
+});
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.style.borderColor = '';
+    uploadZone.style.background = '';
+});
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = '';
+    uploadZone.style.background = '';
+    if (e.dataTransfer.files.length > 0) {
+        document.getElementById('fileInput').files = e.dataTransfer.files;
+        uploadFile(document.getElementById('fileInput'));
+    }
+});
+</script>
+{% endblock %}

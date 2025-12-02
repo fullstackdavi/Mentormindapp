@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Pontos Fracos - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-exclamation-triangle"></i> Detector de Pontos Fracos</h1>
+        <p>Identifique seus pontos fracos e melhore seu desempenho</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-pie"></i> Erros por Materia</h3>
+                </div>
+                {% if subjects %}
+                <div style="display: grid; gap: 15px;">
+                    {% for s in subjects %}
+                    <div style="padding: 15px; background: var(--primary); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="font-weight: 600;">{{ s.subject }}</span>
+                            <span style="color: var(--danger);">{{ s.error_count }} erros</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ (s.error_count / subjects[0].error_count * 100) if subjects[0].error_count > 0 else 0 }}%; background: var(--danger);"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <i class="fas fa-check-circle" style="font-size: 48px; color: var(--success); margin-bottom: 15px;"></i>
+                    <p>Nenhum erro registrado ainda!</p>
+                    <p>Faca simulados para identificar seus pontos fracos.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-list"></i> Detalhes dos Erros</h3>
+                </div>
+                {% if details %}
+                <div style="max-height: 500px; overflow-y: auto;">
+                    {% for d in details %}
+                    <div style="padding: 12px; background: var(--primary); border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--danger);">
+                        <div style="font-size: 12px; color: var(--accent-light); margin-bottom: 5px;">{{ d.subject }}</div>
+                        <p style="font-size: 13px;">{{ d.topic }}</p>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">
+                            {{ d.error_count }} erro(s) - {{ d.last_error_at[:10] }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Nenhum erro detalhado registrado
+                </p>
+                {% endif %}
+            </div>
+            
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-lightbulb"></i> Recomendacoes</h3>
+                </div>
+                {% if subjects %}
+                <div style="padding: 15px; background: var(--primary); border-radius: 8px;">
+                    <p style="margin-bottom: 15px;">Baseado nos seus erros, recomendamos:</p>
+                    <ul style="list-style: none;">
+                        {% for s in subjects[:3] %}
+                        <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-arrow-right" style="color: var(--accent);"></i>
+                            Revisar {{ s.subject }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ url_for('tutor') }}" class="btn btn-primary" style="width: 100%; margin-top: 15px;">
+                        <i class="fas fa-robot"></i> Estudar com Tutor IA
+                    </a>
+                </div>
+                {% else %}
+                <p style="text-align: center; color: var(--text-muted); padding: 20px;">
+                    Faca simulados para receber recomendacoes personalizadas
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Plano de Estudos - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-calendar-check"></i> Plano de Estudos Inteligente</h1>
+        <p>Crie cronogramas personalizados para seus objetivos</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div>
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-plus"></i> Criar Novo Plano</h3>
+                </div>
+                <form id="planForm">
+                    <div class="form-group">
+                        <label class="form-label">Nome do Plano</label>
+                        <input type="text" class="form-control" id="planTitle" placeholder="Ex: Preparacao ENEM 2025" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Objetivo</label>
+                        <select class="form-control" id="planObjective">
+                            <option value="ENEM">ENEM</option>
+                            <option value="Concurso">Concurso Publico</option>
+                            <option value="Vestibular">Vestibular</option>
+                            <option value="Faculdade">Provas da Faculdade</option>
+                            <option value="Certificacao">Certificacao</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horas por dia</label>
+                        <input type="number" class="form-control" id="planHours" value="2" min="0.5" max="12" step="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data limite</label>
+                        <input type="date" class="form-control" id="planDeadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Materias</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" class="form-control" id="subjectInput" placeholder="Digite uma materia">
+                            <button type="button" class="btn btn-secondary" onclick="addSubject()">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div id="subjectsList" class="subjects-input"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;" id="createPlanBtn">
+                        <i class="fas fa-magic"></i> Criar Plano com IA
+                    </button>
+                </form>
+            </div>
+            
+            {% if plans %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-list"></i> Meus Planos</h3>
+                </div>
+                {% for plan in plans %}
+                <div style="padding: 15px; background: var(--primary); border-radius: 8px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>{{ plan.title }}</h4>
+                            <p style="color: var(--text-muted); font-size: 13px;">
+                                {{ plan.objective }} - {{ plan.daily_hours }}h/dia
+                            </p>
+                        </div>
+                        <span class="tag" style="background: var(--success);">Ativo</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-tasks"></i> Proximas Tarefas</h3>
+                </div>
+                {% if tasks %}
+                <ul class="task-list">
+                    {% for task in tasks %}
+                    <li class="task-item {% if task.is_completed %}completed{% endif %}">
+                        <div class="task-checkbox {% if task.is_completed %}completed{% endif %}" onclick="toggleTask({{ task.id }})">
+                            {% if task.is_completed %}<i class="fas fa-check"></i>{% endif %}
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">{{ task.title }}</div>
+                            <div class="task-meta">
+                                {{ task.subject }} - {{ task.scheduled_date }} - {{ task.duration_minutes }} min
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Nenhuma tarefa agendada. Crie um plano de estudos!
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let subjects = [];
+
+function addSubject() {
+    const input = document.getElementById('subjectInput');
+    const subject = input.value.trim();
+    
+    if (subject && !subjects.includes(subject)) {
+        subjects.push(subject);
+        renderSubjects();
+        input.value = '';
+    }
+}
+
+function removeSubject(index) {
+    subjects.splice(index, 1);
+    renderSubjects();
+}
+
+function renderSubjects() {
+    const container = document.getElementById('subjectsList');
+    container.innerHTML = subjects.map((s, i) => `
+        <span class="subject-tag">
+            ${s}
+            <button type="button" onclick="removeSubject(${i})">&times;</button>
+        </span>
+    `).join('');
+}
+
+document.getElementById('subjectInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        addSubject();
+    }
+});
+
+document.getElementById('planForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (subjects.length === 0) {
+        alert('Adicione pelo menos uma materia');
+        return;
+    }
+    
+    const btn = document.getElementById('createPlanBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando plano...';
+    
+    try {
+        const response = await fetch('/api/create-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: document.getElementById('planTitle').value,
+                objective: document.getElementById('planObjective').value,
+                daily_hours: parseFloat(document.getElementById('planHours').value),
+                deadline: document.getElementById('planDeadline').value,
+                subjects: subjects
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Plano criado com sucesso!');
+            location.reload();
+        } else {
+            alert(data.error || 'Erro ao criar plano');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Erro ao criar plano');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-magic"></i> Criar Plano com IA';
+    }
+});
+
+async function toggleTask(taskId) {
+    try {
+        const response = await fetch('/api/task/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: taskId })
+        });
+        const data = await response.json();
+        if (data.success) {
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+</script>
+{% endblock %}

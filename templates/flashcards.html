@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Flashcards - MentorMind{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <div class="dashboard-header">
+        <h1><i class="fas fa-clone"></i> Flashcards Inteligentes</h1>
+        <p>Sistema de revisao espacada SM-2 para memorizacao eficiente</p>
+    </div>
+    
+    <div class="stats-grid" style="margin-bottom: 30px;">
+        <div class="stat-card">
+            <div class="stat-icon flashcards">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ pending|length }}</h3>
+                <p>Para revisar hoje</p>
+            </div>
+        </div>
+        {% for deck in decks %}
+        <div class="stat-card">
+            <div class="stat-icon focus">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <div class="stat-info">
+                <h3>{{ deck.count }}</h3>
+                <p>{{ deck.deck_name }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if pending %}
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-inner">
+                <div class="flashcard-front">
+                    <p id="cardFront">{{ pending[0].front }}</p>
+                </div>
+                <div class="flashcard-back">
+                    <p id="cardBack">{{ pending[0].back }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-bottom: 20px; color: var(--text-muted);">
+            Clique no card para ver a resposta
+        </p>
+        
+        <div class="flashcard-buttons" id="reviewButtons" style="display: none;">
+            <button class="flashcard-btn hard" onclick="reviewCard(1)">
+                <i class="fas fa-times"></i> Nao lembrei
+            </button>
+            <button class="flashcard-btn medium" onclick="reviewCard(3)">
+                <i class="fas fa-minus"></i> Dificil
+            </button>
+            <button class="flashcard-btn easy" onclick="reviewCard(5)">
+                <i class="fas fa-check"></i> Facil
+            </button>
+        </div>
+        
+        <p style="text-align: center; margin-top: 20px; color: var(--text-muted);">
+            Card <span id="currentIndex">1</span> de <span id="totalCards">{{ pending|length }}</span>
+        </p>
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 60px;">
+        <i class="fas fa-check-circle" style="font-size: 64px; color: var(--success); margin-bottom: 20px;"></i>
+        <h2>Parabens!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Voce revisou todos os flashcards de hoje!</p>
+        <a href="{{ url_for('summary') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Criar mais flashcards
+        </a>
+    </div>
+    {% endif %}
+    
+    <div class="card" style="margin-top: 40px;">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-plus"></i> Criar Flashcard Manual</h3>
+        </div>
+        <form id="createFlashcardForm">
+            <div class="form-group">
+                <label class="form-label">Frente (Pergunta)</label>
+                <input type="text" class="form-control" id="newFront" placeholder="Digite a pergunta" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Verso (Resposta)</label>
+                <textarea class="form-control" id="newBack" rows="3" placeholder="Digite a resposta" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Deck</label>
+                <input type="text" class="form-control" id="newDeck" placeholder="Nome do deck" value="Geral">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Criar Flashcard
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const cards = {{ pending|tojson|safe if pending else '[]' }};
+let currentCardIndex = 0;
+let isFlipped = false;
+
+function flipCard() {
+    const card = document.getElementById('flashcard');
+    card.classList.toggle('flipped');
+    isFlipped = !isFlipped;
+    
+    if (isFlipped) {
+        document.getElementById('reviewButtons').style.display = 'flex';
+    }
+}
+
+async function reviewCard(quality) {
+    if (cards.length === 0) return;
+    
+    const cardId = cards[currentCardIndex].id;
+    
+    try {
+        const response = await fetch('/api/flashcard/review', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ flashcard_id: cardId, quality: quality })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            currentCardIndex++;
+            
+            if (currentCardIndex >= cards.length) {
+                location.reload();
+            } else {
+                showCard(currentCardIndex);
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function showCard(index) {
+    const card = document.getElementById('flashcard');
+    card.classList.remove('flipped');
+    isFlipped = false;
+    document.getElementById('reviewButtons').style.display = 'none';
+    
+    document.getElementById('cardFront').textContent = cards[index].front;
+    document.getElementById('cardBack').textContent = cards[index].back;
+    document.getElementById('currentIndex').textContent = index + 1;
+}
+
+document.getElementById('createFlashcardForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const front = document.getElementById('newFront').value;
+    const back = document.getElementById('newBack').value;
+    const deck = document.getElementById('newDeck').value;
+    
+    try {
+        const response = await fetch('/api/flashcard/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ front, back, deck_name: deck })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Flashcard criado com sucesso!');
+            document.getElementById('newFront').value = '';
+            document.getElementById('newBack').value = '';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+</script>
+{% endblock %}

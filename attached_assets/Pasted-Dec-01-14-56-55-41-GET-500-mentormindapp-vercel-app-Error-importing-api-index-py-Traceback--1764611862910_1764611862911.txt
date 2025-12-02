@@ -1,0 +1,129 @@
+Dec 01 14:56:55.41
+GET
+500
+mentormindapp.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:56:56.390093] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:56:55.37
+GET
+500
+mentormindapp.vercel.app
+/
+Dec 01 14:54:48.04
+GET
+500
+mentormindapp.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:54:48.876005] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:54:47.79
+GET
+500
+mentormindapp.vercel.app
+/
+Dec 01 14:49:03.51
+GET
+500
+mentormindapp.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:49:04.669561] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:49:03.29
+GET
+500
+mentormindapp.vercel.app
+/
+Dec 01 14:44:59.54
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.png
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:45:00.530848] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:56.21
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.png
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:57.213721] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:54.09
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.png
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:55.037252] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:53.00
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.ico
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:53.916510] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:49.73
+GET
+---
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.ico
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:50.803422] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:47.50
+GET
+---
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.ico
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:48.507078] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:46.29
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:47.243680] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:44.16
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:45.106100] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:29.18
+GET
+---
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.ico
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:30.100619] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:29.12
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/favicon.ico
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:30.108704] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:28.01
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:28.980528] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:27.92
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:28.934894] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:25.22
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:26.842007] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue. Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:27.688974] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:25.20
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:26.857046] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue. Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:27.770098] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:24.67
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:26.570349] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue. Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc__handler__python.py", line 243, in <module> __vc_spec.loader.exec_module(__vc_module) File "<frozen importlib._bootstrap_external>", line 999, in exec_module File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed File "/var/task/api/index.py", line 9, in <module> from app import app File "/var/task/app.py", line 1062, in <module> init_db() File "/var/task/database.py", line 327, in init_db conn = get_db() ^^^^^^^^ File "/var/task/database.py", line 24, in get_db import sqlitecloud ModuleNotFoundError: No module named 'sqlitecloud' Thread de ping ao SQLite Cloud iniciado Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt [2025-12-01 17:44:27.422591] Erro no ping ao SQLite Cloud: No module named 'sqlitecloud' Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt Python process exited with exit status: 1. The logs above can help with debugging the issue.
+Dec 01 14:44:24.66
+GET
+500
+mentormindapp-ly5w9922z-paulo-davis-projects.vercel.app
+/
+Error importing api/index.py: Traceback (most recent call last): File "/var/task/vc_
