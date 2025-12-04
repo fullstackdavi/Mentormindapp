@@ -17,14 +17,13 @@ def dict_factory(cursor, row):
     return {key: value for key, value in zip(fields, row)}
 
 def get_db():
-    """Conecta ao SQLite Cloud"""
+    """Conecta ao banco de dados SQLite local"""
     global _db_initialized
     
     try:
-        import sqlitecloud
-        
-        # Conecta ao SQLite Cloud
-        conn = sqlitecloud.connect(SQLITECLOUD_URL)
+        # Usar SQLite local ao invés de SQLite Cloud
+        db_path = os.path.join(os.path.dirname(__file__), 'mentormind.db')
+        conn = sqlite3.connect(db_path)
         # Usa dict_factory ao invés de sqlite3.Row para compatibilidade
         conn.row_factory = dict_factory
         
@@ -32,16 +31,10 @@ def get_db():
         if not _db_initialized:
             init_db_tables(conn)
             _db_initialized = True
-            # Inicia o thread de ping apenas em ambientes não-serverless
-            if not os.environ.get('VERCEL'):
-                start_ping_thread()
         
         return conn
-    except ImportError as e:
-        print(f"Erro: sqlitecloud não está instalado. Certifique-se de que está em requirements.txt")
-        raise
     except Exception as e:
-        print(f"Erro ao conectar ao SQLite Cloud: {e}")
+        print(f"Erro ao conectar ao banco de dados: {e}")
         raise
 
 def ping_database():
